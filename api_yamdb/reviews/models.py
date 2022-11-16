@@ -11,6 +11,13 @@ class Category(models.Model):
         max_length=50
     )
 
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.name
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=256, verbose_name='Название жанра')
@@ -20,9 +27,16 @@ class Genre(models.Model):
         max_length=50
     )
 
+    class Meta:
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
+
+    def __str__(self):
+        return self.name
+
 
 class Title(models.Model):
-    name = models.CharField(max_length=350, verbose_name='Название')
+    name = models.CharField(max_length=500, verbose_name='Название')
     description = models.TextField(
         verbose_name='Описание',
         blank=True,
@@ -46,3 +60,10 @@ class Title(models.Model):
         verbose_name='жанр',
         related_name='titles'
     )
+
+    class Meta:
+        verbose_name = 'Произведение'
+        verbose_name_plural = 'Произведения'
+
+    def __str__(self):
+        return self.name
