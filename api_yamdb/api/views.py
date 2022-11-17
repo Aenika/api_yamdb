@@ -5,6 +5,7 @@ from .permissions import IsAdminOrReadOnly
 from .serializers import (
     CategorySerializer,
     GenreSerializer,
+    TitleReadSerializer,
     TitleSerializer
 )
 from .viewsets import CreateDeleteListViewSet
@@ -24,5 +25,9 @@ class GenreViewSet(CreateDeleteListViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all
-    serializer_class = TitleSerializer
     permission_classes = IsAdminOrReadOnly
+
+    def get_serializer_class(self):
+        if self.action in ("retrieve", "list"):
+            return TitleReadSerializer
+        return TitleSerializer
