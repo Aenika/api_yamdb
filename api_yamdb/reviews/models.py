@@ -68,7 +68,7 @@ class Title(models.Model):
         Genre,
         blank=True,
         verbose_name='жанр',
-        related_name='titles'
+        through='Genre_title'
     )
 
     class Meta:
@@ -77,3 +77,17 @@ class Title(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Genre_title(models.Model):
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE
+    )
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return f'{self.title} в жанре {self.genre}.'
