@@ -16,6 +16,8 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class TitleSerializer(serializers.ModelSerializer):
+    rating = serializers.SerializerMethodField()
+
     class Meta:
         fields = '__all__'
         model = Title
@@ -43,7 +45,7 @@ class ReviewSerializers(serializers.ModelSerializer):
     def validate(self, data):
         title_id = self.context['view'].kwargs['title_id']
         author_id = self.context['request'].user.id
-        if self.context['request'].method != 'PATCH':
+        if self.context['request'].method == 'POST':
             if len(Review.objects.filter(
                     author_id=author_id, title_id=title_id)) != 0:
                 raise serializers.ValidationError('Отзыв уже существует')

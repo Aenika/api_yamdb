@@ -10,8 +10,6 @@ from rest_framework.pagination import LimitOffsetPagination
 from .serializers import (CommentSerializers, ReviewSerializers)
 from reviews.models import Comment, Review, User
 
-FIELD_ERROR = 'Неуникальное поле. Пользователь с таким {} уже существует'
-
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializers

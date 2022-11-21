@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 
 from .validators import validate_not_future
 import datetime as dt
+from core.models import CreatedModel
 
 
 User = get_user_model()
@@ -57,7 +58,7 @@ class Title(models.Model):
     )
 
 
-class Review(models.Model):
+class Review(CreatedModel):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -65,16 +66,11 @@ class Review(models.Model):
         related_name='reviews'
     )
     text = models.TextField(
-        'Текст отзыва',
+        verbose_name='Текст отзыва',
         max_length=500
     )
-    pub_date = models.DateTimeField(
-        'Дата публикации отзыва',
-        auto_now_add=True,
-        db_index=True
-    )
     score = models.PositiveIntegerField(
-        'Оценка',
+        verbose_name='Оценка',
         validators=[
             MaxValueValidator(10),
             MinValueValidator(1),
@@ -101,7 +97,7 @@ class Review(models.Model):
         return self.text
 
 
-class Comment(models.Model):
+class Comment(CreatedModel):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -109,17 +105,15 @@ class Comment(models.Model):
         related_name='comments'
     )
     text = models.TextField(
-        'Текст коментария',
+        verbose_name='Текст коментария',
         max_length=500
     )
-    pub_date = models.DateTimeField(
-        'Дата публикации отзыва',
-        auto_now_add=True,
-        db_index=True
-    )
+
     title = models.ForeignKey(
         Title,
-        on_delete=models.CASCADE,
+        null=True,
+        blank=False,
+        on_delete=models.SET_NULL,
         verbose_name='Произведение',
         related_name='comments'
     )
@@ -128,3 +122,10 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments'
     )
+
+    class Meta:
+        verbose_name = ('Комментарий')
+        verbose_name_plural = ('Комментарии')
+
+    def __str__(self):
+        return self.text
