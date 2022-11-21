@@ -13,3 +13,9 @@ class MeUserSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = User
+        read_only_fields = ('role',)
+
+    def validate(self, data):
+        if self.context['request'].user == "me":
+            raise serializers.ValidationError('Нельзя использовать данное имя')
+        return data

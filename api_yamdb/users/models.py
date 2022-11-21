@@ -12,7 +12,9 @@ class User(AbstractUser):
                             max_length=10,
                             default='user')
     bio = models.TextField('Биография',
-                           blank=True)
+                           blank=True,
+                           null=True)
     email = models.EmailField(max_length=254,
                               blank=False,
+                              null=True,
                               unique=True)

@@ -15,7 +15,7 @@ class CheckCode(APIView):
     def post(self, request):
         serializer = TokenSerializer(data=request.data)
         if serializer.is_valid():
-            if CodeEmail.objects.filter(code=serializer.validated_data['code'],
+            if CodeEmail.objects.filter(code=serializer.validated_data['confirmation_code'],
                                         username=serializer.validated_data['username']).exists():
                 user = User.objects.get(username=serializer.validated_data['username'])
                 refresh = RefreshToken.for_user(user)
@@ -35,9 +35,8 @@ class SendCode(APIView):
             email = serializer.validated_data['email']
             serializer.save(email=email, code=code_generator)
             send_mail('confirmation code', str(code_generator), 'yambd@yambd.ru', [email, ], )
-            User.objects.create_user(email=serializer.validated_data['email'],
-                                     username=serializer.validated_data['username'])
-            serializer.save(code=code_generator)
+            User.objects.get_or_create(email=serializer.validated_data['email'],
+                                       username=serializer.validated_data['username'])
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

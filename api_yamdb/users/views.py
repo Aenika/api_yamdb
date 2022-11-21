@@ -1,17 +1,11 @@
-from rest_framework import mixins, viewsets
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import user_passes_test
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .decorators import is_admin
 from .models import User
-from .serializers import AdminUserSerializer, MeUserSerializer
 from .permissions import IsAdmin
+from .serializers import AdminUserSerializer, MeUserSerializer
 
 
 class AdminUsersViewSet(viewsets.ModelViewSet):
@@ -22,6 +16,7 @@ class AdminUsersViewSet(viewsets.ModelViewSet):
 
 class MeUser(APIView):
     permission_classes = [IsAuthenticated, ]
+
     def get(self, request):
         serializer = MeUserSerializer(request.user)
         return Response(serializer.data)
