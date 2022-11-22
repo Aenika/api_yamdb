@@ -12,7 +12,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User, CodeEmail
 
-from .permissions import IsAdminOrReadOnly
+from .permissions import (IsAdminOrReadOnly,
+                          IsAdminModeratorOwnerOrReadOnly)
 from .serializers import (
     CategorySerializer,
     CommentSerializers,
@@ -59,6 +60,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializers
     pagination_class = LimitOffsetPagination
+    permission_classes = (IsAdminModeratorOwnerOrReadOnly,)
 
     def get_queryset(self):
         title_id = self.kwargs.get('title_id')
@@ -76,6 +78,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializers
     pagination_class = LimitOffsetPagination
+    permission_classes = (IsAdminModeratorOwnerOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
 
     def get_queryset(self):
@@ -85,34 +88,65 @@ class CommentViewSet(viewsets.ModelViewSet):
             title=title_id, review=review_id)
         return new_queryset
 
+    def perform_create(self, serializer):
+        title_id = self.kwargs.get('title_id')
+        review_id = self.kwargs.get('review_id')
+        review = get_object_or_404(Review, pk=review_id)
+        serializer.save(author=User.objects.get(
+            username=self.request.user), review_id=review.id,
+            title_id=title_id)
+
 
 class CheckCode(APIView):
 
     def post(self, request):
         serializer = TokenSerializer(data=request.data)
         if serializer.is_valid():
-            if CodeEmail.objects.filter(confirmation_code=serializer.validated_data['confirmation_code'],
-                                        username=serializer.validated_data['username']).exists():
-                user = User.objects.get(username=serializer.validated_data['username'])
+            if CodeEmail.objects.filter(
+                confirmation_code=serializer.validated_data['confirmation_code'],
+                username=serializer.validated_data['username']
+            ).exists():
+                user = User.objects.get(
+                    username=serializer.validated_data['username']
+                )
                 refresh = RefreshToken.for_user(user)
-                return Response({'token': str(refresh.access_token)}, status=status.HTTP_200_OK)  # token
+                return Response(
+                    {'token': str(refresh.access_token)},
+                    status=status.HTTP_200_OK
+                )
             else:
-                return Response({'message': 'not equal'})
+                return Response(
+                    {'message': 'not equal'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         else:
-            return Response({'message': 'not valid'})
+            return Response(
+                {'message': 'not valid'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class SendCode(APIView):
 
     def post(self, request):
         serializer = CodeEmailSerializer(data=request.data)
-        code_generator = ''.join([str(random.randint(0, 10)) for i in range(6)])
+        code_generator = ''.join(
+            [str(random.randint(0, 10)) for i in range(6)]
+        )
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            serializer.save(email=email, code=code_generator)
-            send_mail('confirmation code', str(code_generator), 'yambd@yambd.ru', [email, ], )
-            User.objects.get_or_create(email=serializer.validated_data['email'],
-                                       username=serializer.validated_data['username'])
-            return Response(status=status.HTTP_201_CREATED)
+            serializer.save(email=email, confirmation_code=code_generator)
+            send_mail(
+                'confirmation code',
+                str(code_generator),
+                'yambd@yambd.ru', [email, ],
+            )
+            User.objects.get_or_create(
+                email=serializer.validated_data['email'],
+                username=serializer.validated_data['username']
+            )
+            return Response(status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
