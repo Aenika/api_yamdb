@@ -32,7 +32,7 @@ class CategoryViewSet(CreateDeleteListViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
-    filterset_fields = ('$name',)
+    search_fields = ('$name',)
 
 
 class GenreViewSet(CreateDeleteListViewSet):
@@ -41,7 +41,7 @@ class GenreViewSet(CreateDeleteListViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
-    filterset_fields = ('$name',)
+    search_fields = ('$name',)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -91,28 +91,51 @@ class CheckCode(APIView):
     def post(self, request):
         serializer = TokenSerializer(data=request.data)
         if serializer.is_valid():
-            if CodeEmail.objects.filter(confirmation_code=serializer.validated_data['confirmation_code'],
-                                        username=serializer.validated_data['username']).exists():
-                user = User.objects.get(username=serializer.validated_data['username'])
+            if CodeEmail.objects.filter(
+                confirmation_code=serializer.validated_data['confirmation_code'],
+                username=serializer.validated_data['username']
+            ).exists():
+                user = User.objects.get(
+                    username=serializer.validated_data['username']
+                )
                 refresh = RefreshToken.for_user(user)
-                return Response({'token': str(refresh.access_token)}, status=status.HTTP_200_OK)
+                return Response(
+                    {'token': str(refresh.access_token)},
+                    status=status.HTTP_200_OK
+                )
             else:
-                return Response({'message': 'not equal'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {'message': 'not equal'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         else:
-            return Response({'message': 'not valid'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'message': 'not valid'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class SendCode(APIView):
 
     def post(self, request):
         serializer = CodeEmailSerializer(data=request.data)
-        code_generator = ''.join([str(random.randint(0, 10)) for i in range(6)])
+        code_generator = ''.join(
+            [str(random.randint(0, 10)) for i in range(6)]
+        )
         if serializer.is_valid():
             email = serializer.validated_data['email']
             serializer.save(email=email, confirmation_code=code_generator)
-            send_mail('confirmation code', str(code_generator), 'yambd@yambd.ru', [email, ], )
-            User.objects.get_or_create(email=serializer.validated_data['email'],
-                                       username=serializer.validated_data['username'])
+            send_mail(
+                'confirmation code',
+                str(code_generator),
+                'yambd@yambd.ru', [email, ],
+            )
+            User.objects.get_or_create(
+                email=serializer.validated_data['email'],
+                username=serializer.validated_data['username']
+            )
             return Response(status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
