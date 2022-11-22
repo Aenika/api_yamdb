@@ -50,6 +50,9 @@ class TitleSerializer(serializers.ModelSerializer):
         queryset=Genre.objects.all(),
         required=True
     )
+    class Meta:
+        fields = '__all__'
+        model = Title
 
 
 class CommentSerializers(serializers.ModelSerializer):
