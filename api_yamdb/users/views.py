@@ -12,6 +12,7 @@ class AdminUsersViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = AdminUserSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
+    lookup_field = "username"
 
 
 class MeUser(APIView):

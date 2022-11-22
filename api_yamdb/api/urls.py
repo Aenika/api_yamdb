@@ -6,7 +6,9 @@ from .views import (
     CommentViewSet,
     GenreViewSet,
     ReviewViewSet,
-    TitleViewSet
+    TitleViewSet,
+    CheckCode,
+    SendCode
 )
 
 router_v1 = DefaultRouter()
@@ -23,7 +25,9 @@ router_v1.register(
     CommentViewSet, basename='comments'
 )
 
-
 urlpatterns = [
+    path('v1/auth/token/', CheckCode.as_view(), name='token'),
+    path('v1/auth/signup/', SendCode.as_view(), name='signup'),
     path('v1/', include(router_v1.urls)),
+
 ]

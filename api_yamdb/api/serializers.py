@@ -1,7 +1,8 @@
 from rest_framework import serializers
-
-from .utils import rating_avg
 from reviews.models import Category, Comment, Genre, Review, Title
+
+from .models import CodeEmail
+from .utils import rating_avg
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -50,6 +51,7 @@ class TitleSerializer(serializers.ModelSerializer):
         queryset=Genre.objects.all(),
         required=True
     )
+
     class Meta:
         fields = '__all__'
         model = Title
@@ -79,3 +81,19 @@ class ReviewSerializers(serializers.ModelSerializer):
                     author_id=author_id, title_id=title_id)) != 0:
                 raise serializers.ValidationError('Отзыв уже существует')
         return data
+
+
+class CodeEmailSerializer(serializers.ModelSerializer):
+    code = serializers.CharField(required=False)
+
+    class Meta:
+        fields = '__all__'
+        model = CodeEmail
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(required=False)
+
+    class Meta:
+        fields = '__all__'
+        model = CodeEmail

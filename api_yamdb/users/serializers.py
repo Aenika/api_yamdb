@@ -7,6 +7,7 @@ class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = User
+        exclude = ['id']
 
 
 class MeUserSerializer(serializers.ModelSerializer):
