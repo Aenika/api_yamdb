@@ -95,11 +95,11 @@ class CheckCode(APIView):
                                         username=serializer.validated_data['username']).exists():
                 user = User.objects.get(username=serializer.validated_data['username'])
                 refresh = RefreshToken.for_user(user)
-                return Response({'token': str(refresh.access_token)}, status=status.HTTP_200_OK)  # token
+                return Response({'token': str(refresh.access_token)}, status=status.HTTP_200_OK)
             else:
-                return Response({'message': 'not equal'})
+                return Response({'message': 'not equal'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'message': 'not valid'})
+            return Response({'message': 'not valid'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SendCode(APIView):
@@ -109,10 +109,10 @@ class SendCode(APIView):
         code_generator = ''.join([str(random.randint(0, 10)) for i in range(6)])
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            serializer.save(email=email, code=code_generator)
+            serializer.save(email=email, confirmation_code=code_generator)
             send_mail('confirmation code', str(code_generator), 'yambd@yambd.ru', [email, ], )
             User.objects.get_or_create(email=serializer.validated_data['email'],
                                        username=serializer.validated_data['username'])
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
