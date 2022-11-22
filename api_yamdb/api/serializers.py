@@ -1,6 +1,7 @@
 from rest_framework import serializers
+
 from .utils import rating_avg
-from reviews.models import Category, Comment, Genre, Review, Title, User
+from reviews.models import Category, Comment, Genre, Review, Title
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -25,7 +26,6 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class TitleReadSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
-
     category = CategorySerializer(many=False)
     genre = GenreSerializer(many=True)
 
@@ -33,7 +33,7 @@ class TitleReadSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Title
 
-    def rating_count(self, obj):
+    def get_rating(self, obj):
         return rating_avg(self, obj)
 
 

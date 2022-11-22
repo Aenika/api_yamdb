@@ -4,15 +4,15 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
 
 from reviews.models import Category, Comment, Genre, Review, Title
-from Users.models import User
+from users.models import User
 from .permissions import IsAdminOrReadOnly
 from .serializers import (
     CategorySerializer,
     CommentSerializers,
     GenreSerializer,
+    ReviewSerializers,
     TitleReadSerializer,
-    TitleSerializer,
-    ReviewSerializers
+    TitleSerializer
 )
 from .viewsets import CreateDeleteListViewSet
 
@@ -75,4 +75,3 @@ class CommentViewSet(viewsets.ModelViewSet):
         new_queryset = Comment.objects.filter(
             title=title_id, review=review_id)
         return new_queryset
-

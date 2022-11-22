@@ -3,13 +3,11 @@ from django.core.validators import (
     MinValueValidator
 )
 from django.db import models
-from django.contrib.auth import get_user_model
 
 from core.constants import CHARS_FOR_NAME, CHARS_FOR_SLUG
 from .validators import validate_not_future
-import datetime as dt
 from core.models import CreatedModel
-from Users.models import User
+from users.models import User
 
 
 class Category(models.Model):
@@ -74,9 +72,8 @@ class Title(models.Model):
     )
     genre = models.ManyToManyField(
         Genre,
-        blank=True,
         verbose_name='жанр',
-        through='Genre_title'
+        through='GenreTitle'
     )
 
     class Meta:
@@ -87,7 +84,7 @@ class Title(models.Model):
         return self.name
 
 
-class Genre_title(models.Model):
+class GenreTitle(models.Model):
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE
@@ -172,4 +169,3 @@ class Comment(CreatedModel):
 
     def __str__(self):
         return self.text
-
