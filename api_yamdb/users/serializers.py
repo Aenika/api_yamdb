@@ -5,9 +5,9 @@ from .models import User
 
 class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = '__all__'
+        fields = ['username', 'email', 'first_name', 'last_name',
+                  'bio', 'role']
         model = User
-        exclude = ['id']
 
 
 class MeUserSerializer(serializers.ModelSerializer):

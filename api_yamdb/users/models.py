@@ -19,6 +19,16 @@ class User(AbstractUser):
                               null=True,
                               unique=True)
 
+    def create_superuser(self, email, username, first_name='super', second_name='user',
+                         bio='superbio', role='admin'):
+        u = self.create_superuser(email, username, first_name, second_name,
+                                  bio, role)
+        u.is_staff = True
+        u.is_active = True
+        u.is_superuser = True
+        u.save(using=self._db)
+        return u
+
 
 class CodeEmail(models.Model):
     confirmation_code = models.CharField(max_length=6, blank=True)

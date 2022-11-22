@@ -91,7 +91,7 @@ class CheckCode(APIView):
     def post(self, request):
         serializer = TokenSerializer(data=request.data)
         if serializer.is_valid():
-            if CodeEmail.objects.filter(code=serializer.validated_data['confirmation_code'],
+            if CodeEmail.objects.filter(confirmation_code=serializer.validated_data['confirmation_code'],
                                         username=serializer.validated_data['username']).exists():
                 user = User.objects.get(username=serializer.validated_data['username'])
                 refresh = RefreshToken.for_user(user)
