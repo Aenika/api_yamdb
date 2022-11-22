@@ -9,10 +9,14 @@ from .serializers import AdminUserSerializer, MeUserSerializer
 
 
 class AdminUsersViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
     serializer_class = AdminUserSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
     lookup_field = "username"
+
+    def get_queryset(self):
+        users = User.objects.all()
+        return users
+
 
 
 class MeUser(APIView):

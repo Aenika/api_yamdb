@@ -111,7 +111,7 @@ class CheckCode(APIView):
         else:
             return Response(
                 {'message': 'not valid'},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_404_NOT_FOUND
             )
 
 
