@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from reviews.models import Category, Comment, Genre, Review, Title
 
-from .models import CodeEmail
+from users.models import CodeEmail
 from .utils import rating_avg
 
 

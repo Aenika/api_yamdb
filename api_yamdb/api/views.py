@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from reviews.models import Category, Comment, Genre, Review, Title
-from users.models import User
+from users.models import User, CodeEmail
 
 from .permissions import IsAdminOrReadOnly
 from .serializers import (
@@ -21,7 +21,6 @@ from .serializers import (
     TitleReadSerializer,
     TitleSerializer,
     CodeEmailSerializer,
-    CodeEmail,
     TokenSerializer,
 )
 from .viewsets import CreateDeleteListViewSet

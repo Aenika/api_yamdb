@@ -18,3 +18,9 @@ class User(AbstractUser):
                               blank=False,
                               null=True,
                               unique=True)
+
+
+class CodeEmail(models.Model):
+    confirmation_code = models.CharField(max_length=6, blank=True)
+    email = models.EmailField(max_length=150)
+    username = models.CharField(max_length=150)
