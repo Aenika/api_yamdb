@@ -124,10 +124,14 @@ class SendCode(APIView):
         )
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            serializer.save(email=email, confirmation_code=code_generator)
+            if not CodeEmail.objects.filter(email=email):
+                serializer.save(email=email, confirmation_code=code_generator)
+                code = code_generator
+            else:
+                code = CodeEmail.objects.get(email=email).confirmation_code
             send_mail(
                 'confirmation code',
-                str(code_generator),
+                code,
                 'yambd@yambd.ru', [email, ],
             )
             User.objects.get_or_create(
