@@ -33,7 +33,7 @@ class CategoryViewSet(CreateDeleteListViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
-    filterset_fields = ('$name',)
+    search_fields = ('$name',)
 
 
 class GenreViewSet(CreateDeleteListViewSet):
@@ -42,7 +42,7 @@ class GenreViewSet(CreateDeleteListViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
-    filterset_fields = ('$name',)
+    search_fields = ('$name',)
 
 
 class TitleViewSet(viewsets.ModelViewSet):

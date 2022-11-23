@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from reviews.models import Category, Comment, Genre, Review, Title
-
 from users.models import CodeEmail
+
 from .utils import rating_avg
 
 
@@ -89,6 +89,11 @@ class CodeEmailSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = CodeEmail
+
+    def validate(self, data):
+        if data['username'] == "me":
+            raise serializers.ValidationError('Нельзя использовать данное имя')
+        return data
 
 
 class TokenSerializer(serializers.ModelSerializer):

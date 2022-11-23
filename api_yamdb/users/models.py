@@ -1,5 +1,19 @@
+from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, username, **extra_fields):
+        u = self.model(email=email, username=username, **extra_fields)
+        u.save()
+        return u
+
+    def create_superuser(self, email, username, role='admin', **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+        return self.create_user(email=email, username=username, role=role)
 
 
 class User(AbstractUser):
@@ -16,18 +30,9 @@ class User(AbstractUser):
                            null=True)
     email = models.EmailField(max_length=254,
                               blank=False,
-                              null=True,
+                              null=False,
                               unique=True)
-
-    def create_superuser(self, email, username, first_name='super', second_name='user',
-                         bio='superbio', role='admin'):
-        u = self.create_superuser(email, username, first_name, second_name,
-                                  bio, role)
-        u.is_staff = True
-        u.is_active = True
-        u.is_superuser = True
-        u.save(using=self._db)
-        return u
+    objects = CustomUserManager()
 
 
 class CodeEmail(models.Model):
