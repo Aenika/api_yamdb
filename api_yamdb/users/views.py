@@ -1,5 +1,4 @@
-from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -30,7 +29,9 @@ class MeUser(APIView):
         return Response(serializer.data)
 
     def patch(self, request):
-        serializer = MeUserSerializer(request.user, data=request.data, partial=True)
+        serializer = MeUserSerializer(
+            request.user, data=request.data, partial=True
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

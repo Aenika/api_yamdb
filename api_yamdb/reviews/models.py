@@ -4,7 +4,13 @@ from django.core.validators import (
 )
 from django.db import models
 
-from core.constants import CHARS_FOR_NAME, CHARS_FOR_SLUG
+from core.constants import (
+    CHARS_FOR_NAME,
+    CHARS_FOR_SLUG,
+    CHARS_FOR_TEXT,
+    MAX_SCORE,
+    MIN_SCORE
+)
 from .validators import validate_not_future
 from core.models import CreatedModel
 from users.models import User
@@ -107,13 +113,13 @@ class Review(CreatedModel):
     )
     text = models.TextField(
         verbose_name='Текст отзыва',
-        max_length=500
+        max_length=CHARS_FOR_TEXT
     )
     score = models.PositiveIntegerField(
         verbose_name='Оценка',
         validators=[
-            MaxValueValidator(10),
-            MinValueValidator(1),
+            MaxValueValidator(MAX_SCORE),
+            MinValueValidator(MIN_SCORE),
         ],
     )
     title = models.ForeignKey(
@@ -146,7 +152,7 @@ class Comment(CreatedModel):
     )
     text = models.TextField(
         verbose_name='Текст коментария',
-        max_length=500
+        max_length=CHARS_FOR_TEXT
     )
 
     title = models.ForeignKey(

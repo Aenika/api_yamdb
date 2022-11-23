@@ -3,12 +3,12 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     CategoryViewSet,
+    CheckCode,
     CommentViewSet,
     GenreViewSet,
     ReviewViewSet,
-    TitleViewSet,
-    CheckCode,
-    SendCode
+    SendCode,
+    TitleViewSet
 )
 
 router_v1 = DefaultRouter()

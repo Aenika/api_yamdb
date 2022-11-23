@@ -2,28 +2,26 @@ import random
 
 from django.core.mail import send_mail
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, viewsets
-from rest_framework import status
+from rest_framework import filters, status, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+
 from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User
-
 from .filters import FilterForTitle
-from .permissions import (IsAdminOrReadOnly,
-                          IsAdminModeratorOwnerOrReadOnly)
+from .permissions import IsAdminModeratorOwnerOrReadOnly, IsAdminOrReadOnly
 from .serializers import (
     CategorySerializer,
+    CodeEmailSerializer,
     CommentSerializers,
     GenreSerializer,
     ReviewSerializers,
     TitleReadSerializer,
     TitleSerializer,
-    CodeEmailSerializer,
-    TokenSerializer,
+    TokenSerializer
 )
 from .viewsets import CreateDeleteListViewSet
 

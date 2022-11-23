@@ -1,7 +1,8 @@
 from rest_framework import serializers
+
+from core.constants import CHARS_FOR_CODE, CHARS_FOR_USERNAME
 from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User
-
 from .utils import rating_avg
 
 
@@ -95,5 +96,5 @@ class CodeEmailSerializer(serializers.ModelSerializer):
 
 
 class TokenSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150)
-    confirmation_code = serializers.CharField(max_length=20)
+    username = serializers.CharField(max_length=CHARS_FOR_USERNAME)
+    confirmation_code = serializers.CharField(max_length=CHARS_FOR_CODE)
