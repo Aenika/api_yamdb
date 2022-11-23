@@ -83,9 +83,10 @@ class ReviewSerializers(serializers.ModelSerializer):
         return data
 
 
-class CodeEmailSerializer(serializers.Serializer):
-    email = serializers.EmailField(max_length=254)
-    username = serializers.CharField(max_length=150)
+class CodeEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
 
     def validate(self, data):
         if data['username'] == "me":

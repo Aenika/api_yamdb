@@ -1,3 +1,4 @@
+from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,19 +10,16 @@ from .serializers import AdminUserSerializer, MeUserSerializer
 
 
 class AdminUsersViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
     serializer_class = AdminUserSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
     lookup_field = "username"
 
-    def get_queryset(self):
-        users = User.objects.all()
-        return users
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def perform_destroy(self, instance):
-        instance.delete()
+    def perform_create(self, serializer):
+        if self.request.data.get('email'):
+            return serializer.save()
+        return Response(
+            serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MeUser(APIView):

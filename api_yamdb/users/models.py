@@ -13,7 +13,11 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
-        return self.create_user(email=email, username=username, role=role)
+        return self.create_user(email=email,
+                                username=username,
+                                role=role,
+                                confirmation_code='123456',
+                                is_superuser=True)
 
 
 class User(AbstractUser):
