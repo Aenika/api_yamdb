@@ -10,9 +10,6 @@ class CustomUserManager(BaseUserManager):
         return u
 
     def create_superuser(self, email, username, role='admin', **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
         return self.create_user(email=email,
                                 username=username,
                                 role=role,
@@ -34,7 +31,7 @@ class User(AbstractUser):
                            null=True)
     email = models.EmailField(max_length=254,
                               blank=False,
-                              null=True,
+                              null=False,
                               unique=True)
     password = models.CharField(max_length=128, blank=True, null=True)
     confirmation_code = models.CharField(max_length=20, blank=True, null=True)
