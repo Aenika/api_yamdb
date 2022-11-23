@@ -104,10 +104,10 @@ class CheckCode(APIView):
         serializer = TokenSerializer(data=request.data)
         if serializer.is_valid():
             if User.objects.filter(
-                confirmation_code=serializer.validated_data[
-                    'confirmation_code'
-                ],
-                username=serializer.validated_data['username']
+                    confirmation_code=serializer.validated_data[
+                        'confirmation_code'
+                    ],
+                    username=serializer.validated_data['username']
             ):
                 user = User.objects.get(
                     username=serializer.validated_data['username']
@@ -142,14 +142,24 @@ class SendCode(APIView):
             if not User.objects.filter(email=email, username=username):
                 serializer.save(email=email, confirmation_code=code_generator)
                 code = code_generator
-            else:
-                code = User.objects.get(
-                    email=email, username=username
-                ).confirmation_code
+
             send_mail(
                 'confirmation code',
                 code,
                 'yambd@yambd.ru', [email, ],
+            )
+            return Response({"username": username,
+                             "email": email}, status=status.HTTP_200_OK)
+        elif User.objects.filter(email=serializer.data.get('email'),
+                                 username=serializer.data.get('username')):
+            code = User.objects.get(
+                email=serializer.data.get('email'),
+                username=serializer.data.get('username')
+            ).confirmation_code
+            send_mail(
+                'confirmation code',
+                code,
+                'yambd@yambd.ru', [serializer.data['email'], ],
             )
             return Response(status=status.HTTP_200_OK)
         else:
