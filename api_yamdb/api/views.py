@@ -102,31 +102,19 @@ class CheckCode(APIView):
 
     def post(self, request):
         serializer = TokenSerializer(data=request.data)
-        if serializer.is_valid():
-            if User.objects.filter(
-                    confirmation_code=serializer.validated_data[
-                        'confirmation_code'
-                    ],
-                    username=serializer.validated_data['username']
-            ):
-                user = User.objects.get(
-                    username=serializer.validated_data['username']
-                )
-                refresh = RefreshToken.for_user(user)
-                return Response(
-                    {'token': str(refresh.access_token)},
-                    status=status.HTTP_200_OK
-                )
-            else:
-                return Response(
-                    serializer.errors,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-        else:
-            return Response(
-                serializer.errors,
-                status=status.HTTP_404_NOT_FOUND
-            )
+        serializer.is_valid(raise_exception=True)
+        user = get_object_or_404(
+            User,
+            username=serializer.validated_data['username']
+        )
+        code_sent = serializer.validated_data['confirmation_code']
+        if user.confirmation_code != code_sent:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        refresh = RefreshToken.for_user(user)
+        return Response(
+            {'token': str(refresh.access_token)},
+            status=status.HTTP_200_OK
+        )
 
 
 class SendCode(APIView):
