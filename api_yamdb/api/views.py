@@ -12,6 +12,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User
 
+from .filters import FilterForTitle
 from .permissions import (IsAdminOrReadOnly,
                           IsAdminModeratorOwnerOrReadOnly)
 from .serializers import (
@@ -49,7 +50,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('name', 'year', 'category__slug', 'genre__slug')
+    filterset_class = FilterForTitle
 
     def get_serializer_class(self):
         if self.action in ("retrieve", "list"):
@@ -103,7 +104,9 @@ class CheckCode(APIView):
         serializer = TokenSerializer(data=request.data)
         if serializer.is_valid():
             if User.objects.filter(
-                confirmation_code=serializer.validated_data['confirmation_code'],
+                confirmation_code=serializer.validated_data[
+                    'confirmation_code'
+                ],
                 username=serializer.validated_data['username']
             ):
                 user = User.objects.get(
@@ -140,7 +143,9 @@ class SendCode(APIView):
                 serializer.save(email=email, confirmation_code=code_generator)
                 code = code_generator
             else:
-                code = User.objects.get(email=email, username=username).confirmation_code
+                code = User.objects.get(
+                    email=email, username=username
+                ).confirmation_code
             send_mail(
                 'confirmation code',
                 code,
