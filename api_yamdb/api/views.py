@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from reviews.models import Category, Comment, Genre, Review, Title
-from users.models import User, CodeEmail
+from users.models import User
 
 from .permissions import IsAdminOrReadOnly
 from .serializers import (
@@ -91,10 +91,10 @@ class CheckCode(APIView):
     def post(self, request):
         serializer = TokenSerializer(data=request.data)
         if serializer.is_valid():
-            if CodeEmail.objects.filter(
+            if User.objects.filter(
                 confirmation_code=serializer.validated_data['confirmation_code'],
                 username=serializer.validated_data['username']
-            ).exists():
+            ):
                 user = User.objects.get(
                     username=serializer.validated_data['username']
                 )
@@ -105,12 +105,12 @@ class CheckCode(APIView):
                 )
             else:
                 return Response(
-                    {'message': 'not equal'},
+                    serializer.errors,
                     status=status.HTTP_400_BAD_REQUEST
                 )
         else:
             return Response(
-                {'message': 'not valid'},
+                serializer.errors,
                 status=status.HTTP_404_NOT_FOUND
             )
 
@@ -124,19 +124,16 @@ class SendCode(APIView):
         )
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            if not CodeEmail.objects.filter(email=email):
+            username = serializer.validated_data['username']
+            if not User.objects.filter(email=email, username=username):
                 serializer.save(email=email, confirmation_code=code_generator)
                 code = code_generator
             else:
-                code = CodeEmail.objects.get(email=email).confirmation_code
+                code = User.objects.get(email=email, username=username).confirmation_code
             send_mail(
                 'confirmation code',
                 code,
                 'yambd@yambd.ru', [email, ],
-            )
-            User.objects.get_or_create(
-                email=serializer.validated_data['email'],
-                username=serializer.validated_data['username']
             )
             return Response(status=status.HTTP_200_OK)
         else:

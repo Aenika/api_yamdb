@@ -7,11 +7,10 @@ from django.db import models
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, **extra_fields):
-        u = self.model(email=email, username=username, **extra_fields)
+        u = self.model(email=email,
+                       username=username,
+                       **extra_fields)
         u.save()
-        CodeEmail.objects.create(email=email, username=username,
-                                 confirmation_code=''.join(
-                                     [str(random.randint(0, 10)) for i in range(6)]))
 
         return u
 
@@ -38,10 +37,7 @@ class User(AbstractUser):
                               blank=False,
                               null=False,
                               unique=True)
+    password = models.CharField(max_length=128, blank=True, null=True)
+    confirmation_code = models.CharField(max_length=20, blank=True, null=True)
     objects = CustomUserManager()
 
-
-class CodeEmail(models.Model):
-    confirmation_code = models.CharField(max_length=20, blank=True, null=True)
-    email = models.EmailField(max_length=150)
-    username = models.CharField(max_length=150)

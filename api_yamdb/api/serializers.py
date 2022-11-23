@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from reviews.models import Category, Comment, Genre, Review, Title
-from users.models import CodeEmail
+from users.models import User
 
 from .utils import rating_avg
 
@@ -83,12 +83,9 @@ class ReviewSerializers(serializers.ModelSerializer):
         return data
 
 
-class CodeEmailSerializer(serializers.ModelSerializer):
-    code = serializers.CharField(required=False)
-
-    class Meta:
-        fields = '__all__'
-        model = CodeEmail
+class CodeEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=254)
+    username = serializers.CharField(max_length=150)
 
     def validate(self, data):
         if data['username'] == "me":
@@ -96,9 +93,6 @@ class CodeEmailSerializer(serializers.ModelSerializer):
         return data
 
 
-class TokenSerializer(serializers.ModelSerializer):
-    email = serializers.CharField(required=False)
-
-    class Meta:
-        fields = '__all__'
-        model = CodeEmail
+class TokenSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    confirmation_code = serializers.CharField(max_length=20)

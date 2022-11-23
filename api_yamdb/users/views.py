@@ -17,6 +17,11 @@ class AdminUsersViewSet(viewsets.ModelViewSet):
         users = User.objects.all()
         return users
 
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        instance.delete()
 
 
 class MeUser(APIView):
