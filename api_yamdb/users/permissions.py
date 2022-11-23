@@ -13,10 +13,5 @@ class IsModerator(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.role == 'moderator'
 
-    def has_object_permission(self, request, view, obj):
-        return True
-
-
-
 
 

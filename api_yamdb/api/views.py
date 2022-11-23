@@ -12,7 +12,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User
 
-from .permissions import IsAdminOrReadOnly
+from .permissions import (IsAdminOrReadOnly,
+                          IsAdminModeratorOwnerOrReadOnly)
 from .serializers import (
     CategorySerializer,
     CommentSerializers,
@@ -59,6 +60,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializers
     pagination_class = LimitOffsetPagination
+    permission_classes = (IsAdminModeratorOwnerOrReadOnly,)
 
     def get_queryset(self):
         title_id = self.kwargs.get('title_id')
@@ -76,6 +78,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializers
     pagination_class = LimitOffsetPagination
+    permission_classes = (IsAdminModeratorOwnerOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
 
     def get_queryset(self):
@@ -84,6 +87,14 @@ class CommentViewSet(viewsets.ModelViewSet):
         new_queryset = Comment.objects.filter(
             title=title_id, review=review_id)
         return new_queryset
+
+    def perform_create(self, serializer):
+        title_id = self.kwargs.get('title_id')
+        review_id = self.kwargs.get('review_id')
+        review = get_object_or_404(Review, pk=review_id)
+        serializer.save(author=User.objects.get(
+            username=self.request.user), review_id=review.id,
+            title_id=title_id)
 
 
 class CheckCode(APIView):

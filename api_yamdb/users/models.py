@@ -1,5 +1,3 @@
-import random
-
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -7,11 +5,8 @@ from django.db import models
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, **extra_fields):
-        u = self.model(email=email,
-                       username=username,
-                       **extra_fields)
+        u = self.model(email=email, username=username, **extra_fields)
         u.save()
-
         return u
 
     def create_superuser(self, email, username, role='admin', **extra_fields):
@@ -35,7 +30,7 @@ class User(AbstractUser):
                            null=True)
     email = models.EmailField(max_length=254,
                               blank=False,
-                              null=False,
+                              null=True,
                               unique=True)
     password = models.CharField(max_length=128, blank=True, null=True)
     confirmation_code = models.CharField(max_length=20, blank=True, null=True)
