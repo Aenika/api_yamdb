@@ -3,11 +3,9 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     CategoryViewSet,
-    CheckCode,
     CommentViewSet,
     GenreViewSet,
     ReviewViewSet,
-    SendCode,
     TitleViewSet
 )
 
@@ -26,8 +24,6 @@ router_v1.register(
 )
 
 urlpatterns = [
-    path('v1/auth/token/', CheckCode.as_view(), name='token'),
-    path('v1/auth/signup/', SendCode.as_view(), name='signup'),
     path('v1/', include(router_v1.urls)),
 
 ]

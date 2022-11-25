@@ -9,3 +9,7 @@ CHARS_FOR_USERNAME = 150
 MIN_SCORE = 1
 MAX_SCORE = 10
 OBJS_PER_PAGE = 5
+YAMBD_EMAIL = 'yambd@yambd.ru'
+ADMIN = 'admin'
+MODERATOR = 'moderator'
+REG_USER = 'user'

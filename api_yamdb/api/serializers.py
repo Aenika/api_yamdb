@@ -1,8 +1,6 @@
 from rest_framework import serializers
 
-from core.constants import CHARS_FOR_CODE, CHARS_FOR_USERNAME
 from reviews.models import Category, Comment, Genre, Review, Title
-from users.models import User
 from .utils import rating_avg
 
 
@@ -83,18 +81,3 @@ class ReviewSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError('Отзыв уже существует')
         return data
 
-
-class CodeEmailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
-
-    def validate(self, data):
-        if data['username'] == "me":
-            raise serializers.ValidationError('Нельзя использовать данное имя')
-        return data
-
-
-class TokenSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=CHARS_FOR_USERNAME)
-    confirmation_code = serializers.CharField(max_length=CHARS_FOR_CODE)
