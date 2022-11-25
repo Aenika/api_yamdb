@@ -7,8 +7,8 @@ from .models import User
 
 class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ['username', 'email', 'first_name', 'last_name',
-                  'bio', 'role']
+        fields = ('username', 'email', 'first_name', 'last_name',
+                  'bio', 'role')
         model = User
         validators = [
             UniqueTogetherValidator(
@@ -20,8 +20,8 @@ class AdminUserSerializer(serializers.ModelSerializer):
 
 class MeUserSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ['username', 'email', 'first_name', 'last_name',
-                  'bio', 'role']
+        fields = ('username', 'email', 'first_name', 'last_name',
+                  'bio', 'role')
         model = User
         read_only_fields = ('role',)
 
