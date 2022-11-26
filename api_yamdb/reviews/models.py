@@ -14,6 +14,7 @@ from core.constants import (
 from .validators import validate_not_future
 from core.models import CreatedModel
 from users.models import User
+from rest_framework import serializers
 
 
 class Category(models.Model):
@@ -116,7 +117,7 @@ class Review(CreatedModel):
         max_length=CHARS_FOR_TEXT
     )
     score = models.PositiveIntegerField(
-        verbose_name='Оценка',
+        verbose_name='Оценкаа',
         validators=[
             MaxValueValidator(MAX_SCORE),
             MinValueValidator(MIN_SCORE),
@@ -129,14 +130,15 @@ class Review(CreatedModel):
         related_name='reviews'
     )
 
+  
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=('title', 'author',),
                 name='unique_reviews')
         ]
-        verbose_name = ('Отзыв')
-        verbose_name_plural = ('Отзывы')
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
         ordering = ('pub_date',)
 
     def __str__(self):
@@ -170,8 +172,9 @@ class Comment(CreatedModel):
     )
 
     class Meta:
-        verbose_name = ('Комментарий')
-        verbose_name_plural = ('Комментарии')
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ('pub_date',)
 
     def __str__(self):
         return self.text
