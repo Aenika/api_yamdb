@@ -8,7 +8,7 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display_links = ('pk', 'author', 'pub_date')
     list_filter = ('author',)
     search_filter = ('title')
-    empaty_value_display = '-пусто-'
+    empty_value_display = '-пусто-'
 
 
 class CommentAdmin(admin.ModelAdmin):
@@ -16,7 +16,7 @@ class CommentAdmin(admin.ModelAdmin):
     list_display_links = ('pk', 'author', 'pub_date')
     list_filter = ('author',)
     search_filter = ('review')
-    empaty_value_display = '-пусто-'
+    empty_value_display = '-пусто-'
 
 
 admin.site.register(Category)
