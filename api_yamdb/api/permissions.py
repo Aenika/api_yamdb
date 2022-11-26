@@ -1,29 +1,15 @@
 from rest_framework import permissions
 
-from users.models import (ADMIN, MODERATOR)
+from core.constants import ADMIN, MODERATOR
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        else:
-            return (
-                request.user.is_authenticated
-                and (request.user.is_superuser
-                     or request.user.role == ADMIN)
-            )
-
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        else:
-            return (
-                request.user.is_authenticated
-                and (request.user.is_superuser
-                     or request.user.role == ADMIN)
-            )
+        return (request.method in permissions.SAFE_METHODS
+                or (request.user.is_authenticated
+                    and (request.user.is_superuser
+                         or request.user.role == ADMIN)))
 
 
 class IsAdminModeratorOwnerOrReadOnly(permissions.BasePermission):

@@ -4,7 +4,7 @@ from django.core.validators import (
 )
 from django.db import models
 
-from core.constants import (
+from .constants import (
     CHARS_FOR_NAME,
     CHARS_FOR_SLUG,
     CHARS_FOR_TEXT,

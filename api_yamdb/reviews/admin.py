@@ -19,8 +19,19 @@ class CommentAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-admin.site.register(Category)
-admin.site.register(Genre)
-admin.site.register(Title)
+class CategoryGenreAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')
+    search_fields = ('slug',)
+
+
+class TitleAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'year', 'category',)
+    search_fields = ('name', 'year')
+    list_filter = ('category', 'genre')
+
+
+admin.site.register(Category, CategoryGenreAdmin)
+admin.site.register(Genre, CategoryGenreAdmin)
+admin.site.register(Title, TitleAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Review, ReviewAdmin)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from core.constants import CHARS_FOR_CODE, CHARS_FOR_USERNAME
+from .constants import CHARS_FOR_CODE, CHARS_FOR_USERNAME
 from .models import User
 
 

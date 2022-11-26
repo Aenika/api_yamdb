@@ -1,15 +1,18 @@
-from core.constants import (CHARS_FOR_CODE,
-                            CHARS_FOR_EMAIL,
-                            CHARS_FOR_PASSWORD,
-                            CHARS_FOR_ROLE,
-                            ADMIN,
-                            MODERATOR,
-                            REG_USER
-
-                            )
+from core.constants import (
+    ADMIN,
+    MODERATOR,
+    REG_USER
+)
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from .constants import (
+    CHARS_FOR_CODE,
+    CHARS_FOR_EMAIL,
+    CHARS_FOR_PASSWORD,
+    CHARS_FOR_ROLE,
+)
 
 
 class CustomUserManager(BaseUserManager):
