@@ -14,7 +14,6 @@ from .serializers import (
     ReviewSerializers,
     TitleReadSerializer,
     TitleSerializer,
-
 )
 from .viewsets import CreateDeleteListViewSet
 
