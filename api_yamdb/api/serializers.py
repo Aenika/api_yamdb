@@ -80,4 +80,3 @@ class ReviewSerializers(serializers.ModelSerializer):
                     author_id=author_id, title_id=title_id)) != 0:
                 raise serializers.ValidationError('Отзыв уже существует')
         return data
-
