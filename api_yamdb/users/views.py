@@ -75,7 +75,6 @@ class SendCode(APIView):
         if serializer.is_valid():
             email = serializer.validated_data['email']
             username = serializer.validated_data['username']
-
             serializer.save(email=email, confirmation_code=code_generator)
             code = code_generator
 

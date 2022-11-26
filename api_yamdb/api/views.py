@@ -5,7 +5,6 @@ from rest_framework.pagination import LimitOffsetPagination
 
 
 from reviews.models import Category, Comment, Genre, Review, Title
-from users.models import User
 from .filters import FilterForTitle
 from .permissions import IsAdminModeratorOwnerOrReadOnly, IsAdminOrReadOnly
 from .serializers import (
@@ -85,5 +84,8 @@ class CommentViewSet(viewsets.ModelViewSet):
         title_id = self.kwargs.get('title_id')
         review_id = self.kwargs.get('review_id')
         review = get_object_or_404(Review, pk=review_id)
-        serializer.save(author=self.request.user, review_id=review.id,
-            title_id=title_id)
+        serializer.save(
+            author=self.request.user,
+            review_id=review.id,
+            title_id=title_id
+        )

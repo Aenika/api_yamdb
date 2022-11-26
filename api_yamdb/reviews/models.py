@@ -14,7 +14,6 @@ from .constants import (
 from .validators import validate_not_future
 from core.models import CreatedModel
 from users.models import User
-from rest_framework import serializers
 
 
 class Category(models.Model):
@@ -94,11 +93,13 @@ class Title(models.Model):
 class GenreTitle(models.Model):
     title = models.ForeignKey(
         Title,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name='произведение'
     )
     genre = models.ForeignKey(
         Genre,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name='жанр'
     )
 
     def __str__(self):
@@ -130,7 +131,6 @@ class Review(CreatedModel):
         related_name='reviews'
     )
 
-  
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -168,7 +168,8 @@ class Comment(CreatedModel):
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
-        related_name='comments'
+        related_name='comments',
+        verbose_name='отзыв'
     )
 
     class Meta:
