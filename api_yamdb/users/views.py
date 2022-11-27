@@ -74,21 +74,21 @@ class SendCode(APIView):
         code_generator = ''.join(
             [str(random.randint(0, 10)) for i in range(6)]
         )
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            username = serializer.validated_data['username']
-            serializer.save(email=email, confirmation_code=code_generator)
-            code = code_generator
-
-            send_mail(
-                'confirmation code',
-                code,
-                YAMBD_EMAIL, [email, ],
-            )
-            return Response({"username": username,
-                             "email": email}, status=status.HTTP_200_OK)
-
-        else:
+        if not serializer.is_valid():
             return Response(
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
+        email = serializer.validated_data['email']
+        username = serializer.validated_data['username']
+        serializer.save(email=email, confirmation_code=code_generator)
+        code = code_generator
+
+        send_mail(
+            'confirmation code',
+            code,
+            YAMBD_EMAIL, [email, ],
+        )
+        return Response({"username": username,
+                         "email": email}, status=status.HTTP_200_OK)
+
+
