@@ -8,8 +8,8 @@ v1_router.register('users', AdminUsersViewSet, basename='users')
 
 
 urlpatterns = [
-    path('auth/token/', CheckCode.as_view(), name='token'),
-    path('auth/signup/', SendCode.as_view(), name='signup'),
-    path('users/me/', MeUser.as_view()),
-    path('', include(v1_router.urls))
+    path('v1/auth/token/', CheckCode.as_view(), name='token'),
+    path('v1/auth/signup/', SendCode.as_view(), name='signup'),
+    path('v1/users/me/', MeUser.as_view()),
+    path('v1/', include(v1_router.urls))
 ]
