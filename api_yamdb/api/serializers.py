@@ -86,7 +86,7 @@ class ReviewSerializers(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
     title = serializers.HiddenField(
-        default=ValueFromViewKeyWordArgumentsDefault('title'),
+        default=ValueFromViewKeyWordArgumentsDefault('title_id'),
     )
 
     class Meta:
@@ -100,11 +100,3 @@ class ReviewSerializers(serializers.ModelSerializer):
             )
         ]
 
-    def validate(self, data):
-        title_id = self.context['view'].kwargs['title_id']
-        author_id = self.context['request'].user.id
-        if self.context['request'].method == 'POST':
-            if Review.objects.filter(
-                    author=author_id, title_id=title_id).exists():
-                raise serializers.ValidationError('Отзыв уже существует')
-        return data
