@@ -1,12 +1,12 @@
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
 from core.constants import (
     ADMIN,
     MODERATOR,
     REG_USER
 )
-from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-
 from .constants import (
     CHARS_FOR_CODE,
     CHARS_FOR_EMAIL,
@@ -64,6 +64,7 @@ class User(AbstractUser):
     @property
     def is_admin(self):
         return self.role == ADMIN
+
     @property
     def is_moderator(self):
         return self.role == MODERATOR

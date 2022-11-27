@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from .constants import CHARS_FOR_CODE, CHARS_FOR_USERNAME
-from .models import User
+from users.constants import CHARS_FOR_CODE, CHARS_FOR_USERNAME
+from users.models import User
 
 
 class AdminUserSerializer(serializers.ModelSerializer):

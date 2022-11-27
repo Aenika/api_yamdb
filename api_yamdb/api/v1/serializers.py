@@ -99,4 +99,3 @@ class ReviewSerializers(serializers.ModelSerializer):
                 fields=['author', 'title'],
             )
         ]
-

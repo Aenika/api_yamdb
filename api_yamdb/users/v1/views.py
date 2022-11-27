@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.constants import YAMBD_EMAIL
-from .models import User
+from users.models import User
 from .permissions import IsAdmin
 from .serializers import (
     AdminUserSerializer,
@@ -90,5 +90,3 @@ class SendCode(APIView):
         )
         return Response({"username": username,
                          "email": email}, status=status.HTTP_200_OK)
-
-
